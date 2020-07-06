@@ -1,4 +1,4 @@
-#Home Security System.
+# Home Security System.
 
 This is a home security system. You can lock and unlock your home.
 But in order to unlock the home the system must recognise you with face recognition algorithm.
