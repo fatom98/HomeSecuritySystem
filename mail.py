@@ -1,4 +1,8 @@
-import smtplib
+import smtplib, os
+from dotenv import find_dotenv, load_dotenv
+
+ENV = find_dotenv()
+load_dotenv(ENV)
 
 class SendEmail:
     def __init__(self, message):
@@ -7,8 +11,9 @@ class SendEmail:
 
     def mail(self):
         # Sending Email<
-        mail = "hhubele890@gmail.com"
-        password = "hhu19989898"
+        fromMail = os.getenv("FROM")
+        password = os.getenv("PASSWORD")
+        toMail =  os.getenv("TO")
 
         # Security
         with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
@@ -17,7 +22,7 @@ class SendEmail:
             smtp.ehlo()
 
             # Login
-            smtp.login(mail, password)
+            smtp.login(fromMail, password)
 
             # Content of Message
             subject = "Reminder"
@@ -27,4 +32,4 @@ class SendEmail:
             msg = f"subject:{subject}\n\n{body}"
 
             # Send Mail
-            smtp.sendmail(mail, "muhammedakbulut98@std.sehir.edu.tr", msg)
+            smtp.sendmail(fromMail, toMail, msg)

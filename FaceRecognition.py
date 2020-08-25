@@ -99,6 +99,7 @@ class Recognise:
     
         except AttributeError:
             print("Please uninstall opencv-python and install opencv-contrib-python instead")
+
         self.test()
 
     def test(self):

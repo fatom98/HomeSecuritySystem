@@ -1,4 +1,3 @@
-#To-do
 from tkinter import *
 from PIL import Image, ImageTk
 from FaceRecognition import Recognise
@@ -32,30 +31,27 @@ class GUI(Frame):
         mainLabel = Label(self.frame1, text = "Welcome. Please login", bg = "#4267B2", fg = "white", font = "ComicSans 16 bold")
         mainLabel.pack(fill = X)
 
-        username = StringVar(value="sherlocked")
-        password = StringVar(value="1234")
-
         userNameLabel = Label(self.frame2, text = "Username: ", font = "ComicSans 12")
         userNameLabel.grid(row = 0, column = 0)
 
-        userName = Entry(self.frame2, textvariable = username)
-        userName.grid(row = 0, column = 1, padx = 20)
-        userName.focus()
+        self.userName = Entry(self.frame2)
+        self.userName.grid(row = 0, column = 1, padx = 20)
+        self.userName.focus()
 
         passwordLabel = Label(self.frame2, text = "Password: ", font = "ComicSans 12")
         passwordLabel.grid(row = 1, column = 0, pady = 10)
 
-        passWord = Entry(self.frame2, textvariable = password)
-        passWord.grid(row = 1, column = 1, pady = 10, padx = 20)
-        passWord.bind("<Return>", lambda event, usn=username, pwd=password: self.exist(usn, pwd))
+        self.passWord = Entry(self.frame2, show = "*")
+        self.passWord.grid(row = 1, column = 1, pady = 10, padx = 20)
+        self.passWord.bind("<Return>", lambda event: self.exist())
 
         login = Button(self.frame2, text = "Login", width = 10, height = 4)
         login.grid(row = 0, column = 2, rowspan = 2, padx = 50)
-        login.bind("<ButtonRelease-1>", lambda event, usn = username, pwd = password: self.exist(usn, pwd))
+        login.bind("<ButtonRelease-1>", lambda event: self.exist())
 
-    def exist(self, username, password):
+    def exist(self):
 
-        username, password = username.get(), password.get()
+        username, password = self.userName.get(), self.passWord.get()
 
         self.db = dbm.open("db/DB", "c")
 
@@ -129,8 +125,8 @@ class GUI(Frame):
         Grid.columnconfigure(frame2, 1, weight = 1)
         Grid.columnconfigure(frame2, 2, weight = 1)
 
-        unlock = Button(frame3, text = "Unlock", height = 3, width = 10, command = self.recog)
-        unlock.pack()
+        self.unlockButton = Button(frame3, text = "Unlock", height = 3, width = 10, command = self.recog, state = DISABLED)
+        self.unlockButton.pack()
 
         txt = Label(frame4, image=self.txt)
         txt.pack(side=LEFT)
@@ -142,7 +138,7 @@ class GUI(Frame):
     def contact(self):
         self.done = ImageTk.PhotoImage(Image.open("icons/done.png"))
         message = f"Emergency at {self.address}. Contact Police"
-        SendEmail(message=message)
+        SendEmail(message = message)
 
         self.emergency["image"] = self.done
         self.state["image"] = self.lock
@@ -154,10 +150,13 @@ class GUI(Frame):
         if ret == "unlocked":
             self.text["text"] = "State: Unlocked"
             self.state["image"] = self.unlock
+            self.unlockButton["state"] = DISABLED
 
     def click(self):
         self.text["text"] = "State: Lock"
         self.state["image"] = self.lock
+        self.unlockButton["state"] = NORMAL
+
 
     def register(self):
         self.popup = Toplevel()
